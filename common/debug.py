@@ -39,7 +39,7 @@ def backup_screenshot(ts):
     为了方便失败的时候 debug
     """
     make_debug_dir(screenshot_backup_dir)
-    shutil.copy('{}{}autojump.png'.format(os.getcwd(), path_split),
+    shutil.copy('{}{}douyin.png'.format(os.getcwd(), path_split),
                 os.path.join(os.getcwd(), screenshot_backup_dir,
                              str(ts) + '.png'))
 
@@ -97,7 +97,7 @@ Host OS: {host_os}
 Python: {python}
 **********""".format(
         size=size_str.replace('\n', ''),
-        dpi=density_str.replace('\n', ''),
+        dpi=density_str.replace('\n', ' '),
         device=device_str.replace('\n', ''),
         phone_os=phone_os_str.replace('\n', ''),
         host_os=sys.platform,

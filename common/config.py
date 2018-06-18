@@ -6,6 +6,7 @@ import os
 import sys
 import json
 import re
+import platform
 
 from common.auto_adb import auto_adb
 
@@ -17,10 +18,16 @@ def open_accordant_config():
     调用配置文件
     """
     screen_size = _get_screen_size()
-    config_file = "{path}/config/{screen_size}/config.json".format(
-        path=sys.path[0],
-        screen_size=screen_size
-    )
+    if  platform.system() == 'Windows':
+        config_file = "{path}\\config\\{screen_size}\\config.json".format(
+            path=sys.path[0],
+            screen_size=screen_size
+        )
+    else:
+        config_file = "{path}/config/{screen_size}/config.json".format(
+            path=sys.path[0],
+            screen_size=screen_size
+        )
 
     # 优先获取执行文件目录的配置文件
     here = sys.path[0]
@@ -37,9 +44,14 @@ def open_accordant_config():
             print("正在从 {} 加载配置文件".format(config_file))
             return json.load(f)
     else:
-        with open('{}/config/default.json'.format(sys.path[0]), 'r') as f:
-            print("Load default config")
-            return json.load(f)
+        if  platform.system() == 'Windows':
+            with open('{}\\config\\default.json'.format(sys.path[0]), 'r') as f:
+                print("Load default config")
+                return json.load(f)
+        else:
+            with open('{}/config/default.json'.format(sys.path[0]), 'r') as f:
+                print("Load default config")
+                return json.load(f)
 
 
 def _get_screen_size():

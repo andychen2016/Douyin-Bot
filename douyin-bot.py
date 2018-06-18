@@ -34,10 +34,10 @@ adb.test_device()
 config = config.open_accordant_config()
 
 # 审美标准
-BEAUTY_THRESHOLD = 80
+BEAUTY_THRESHOLD = 60
 
 # 最小年龄
-GIRL_MIN_AGE = 18
+GIRL_MIN_AGE = 10
 
 
 def yes_or_no():
@@ -62,7 +62,7 @@ def _random_bias(num):
     :param num:
     :return:
     """
-    print('num = ', num)
+    # print('num = ', num)
     return random.randint(-num, num)
 
 
@@ -75,7 +75,7 @@ def next_page():
         x1=config['center_point']['x'],
         y1=config['center_point']['y']+config['center_point']['ry'],
         x2=config['center_point']['x'],
-        y2=config['center_point']['y'],
+        y2=config['center_point']['y']-config['center_point']['ry'],
         duration=200
     )
     adb.run(cmd)
@@ -88,8 +88,8 @@ def follow_user():
     :return:
     """
     cmd = 'shell input tap {x} {y}'.format(
-        x=config['follow_bottom']['x'] + _random_bias(10),
-        y=config['follow_bottom']['y'] + _random_bias(10)
+        x=config['follow_bottom']['x'],
+        y=config['follow_bottom']['y']
     )
     adb.run(cmd)
     time.sleep(0.5)
@@ -101,11 +101,12 @@ def thumbs_up():
     :return:
     """
     cmd = 'shell input tap {x} {y}'.format(
-        x=config['star_bottom']['x'] + _random_bias(10),
-        y=config['star_bottom']['y'] + _random_bias(10)
+        x=config['star_bottom']['x'],
+        y=config['star_bottom']['y']
     )
     adb.run(cmd)
     time.sleep(0.5)
+
 
 
 def main():
@@ -121,10 +122,10 @@ def main():
     while True:
         next_page()
 
-        time.sleep(1)
+        time.sleep(1.5)
         screenshot.pull_screenshot()
 
-        resize_image('autojump.png', 'optimized.png', 1024*1024)
+        resize_image('douyin.png', 'optimized.png', 1024*1024)
 
         with open('optimized.png', 'rb') as bin_data:
             image_data = bin_data.read()
@@ -138,12 +139,9 @@ def main():
         if rsp['ret'] == 0:
             beauty = 0
             for face in rsp['data']['face_list']:
-                print(face)
+                # print(face)
                 face_area = (face['x'], face['y'], face['x']+face['width'], face['y']+face['height'])
-                print(face_area)
-                img = Image.open("optimized.png")
-                cropped_img = img.crop(face_area).convert('RGB')
-                cropped_img.save(FACE_PATH + face['face_id'] + '.png')
+                # print(face_area)
                 # 性别判断
                 if face['beauty'] > beauty and face['gender'] < 50:
                     beauty = face['beauty']
@@ -158,6 +156,10 @@ def main():
                 print('发现漂亮妹子！！！')
                 thumbs_up()
                 follow_user()
+                # 保存妹子头像
+                img = Image.open("optimized.png")
+                cropped_img = img.crop(face_area).convert('png')
+                cropped_img.save(FACE_PATH + face['face_id'] + '.png')
 
         else:
             print(rsp)

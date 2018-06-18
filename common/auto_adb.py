@@ -8,6 +8,7 @@ class auto_adb():
     def __init__(self):
         try:
             adb_path = 'adb'
+            #打开子进程，测试adb工具是否在本目录下
             subprocess.Popen([adb_path], stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
             self.adb_path = adb_path
@@ -46,7 +47,7 @@ class auto_adb():
         command_list = [self.adb_path, 'devices']
         process = subprocess.Popen(command_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = process.communicate()
-        if output[0].decode('utf8') == 'List of devices attached\n\n':
+        if output[0].decode('utf8') == 'List of devices attached \r\n\r\n':
             print('未找到设备')
             print('adb 输出:')
             for each in output:

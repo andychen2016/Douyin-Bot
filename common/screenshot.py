@@ -7,6 +7,7 @@ import os
 import sys
 from PIL import Image
 from io import StringIO
+import platform
 
 try:
     from common.auto_adb import auto_adb
@@ -37,9 +38,12 @@ def pull_screenshot():
             binary_screenshot = binary_screenshot.replace(b'\r\r\n', b'\n')
         return Image.open(StringIO(binary_screenshot))
     elif SCREENSHOT_WAY == 0:
-        adb.run('shell screencap -p /sdcard/autojump.png')
-        adb.run('pull /sdcard/autojump.png .')
-        return Image.open('./autojump.png')
+        adb.run('shell screencap -p /sdcard/douyin.png')
+        adb.run('pull /sdcard/douyin.png .')
+        if platform.system() == 'Windows':
+            return Image.open('.\\douyin.png')
+        else:
+            return Image.open('./douyin.png')
 
 
 def check_screenshot():
@@ -47,9 +51,9 @@ def check_screenshot():
     检查获取截图的方式
     """
     global SCREENSHOT_WAY
-    if os.path.isfile('autojump.png'):
+    if os.path.isfile('douyin.png'):
         try:
-            os.remove('autojump.png')
+            os.remove('douyin.png')
         except Exception:
             pass
     if SCREENSHOT_WAY < 0:
