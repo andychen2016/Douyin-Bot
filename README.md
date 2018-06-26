@@ -49,6 +49,8 @@
 
 ![](./screenshot/faces.png)
 
+## 增加小米MIX2适配
+
 ## LICENSE
 
 MIT
